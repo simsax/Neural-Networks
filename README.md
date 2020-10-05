@@ -1,2 +1,2 @@
-# Neural-Networks-stuff
-Beginner experimenting with neural networks
+# Neural-Networks
+My first steps with neural networks
