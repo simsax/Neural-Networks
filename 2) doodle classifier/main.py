@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+import tkinter as tk
 sys.path.insert(1, '/Users/Sax/Desktop/RETI NEURALI E ALG GENETICI/Cazzeggio/toy_nn')
 from matrix import *
 from nn import *
@@ -13,6 +14,8 @@ TESTING_DATA = TOTAL_DATA-TRAINING_DATA # numero di immagini per il test
 CAT = 0
 RAINBOW = 1
 TRAIN = 2
+
+epochCounter = 0
 
 #oggetto Matrix in input
 def invertGrey(m):
@@ -44,6 +47,16 @@ def trainEpoch(training):
         targets[label] = 1
         nn.train(inputs, targets)
 
+def trainButton(training):
+    global epochCounter
+    trainEpoch(training)
+    epochCounter += 1
+    print(f"Epoch: {epochCounter}")
+
+def testButton(testing):
+    percentCorrect = testAll(testing)
+    print(f"Correct guesses: {percentCorrect*100:.2f}%")
+
 def testAll(testing):
     correct = 0
     for i in range(0, len(testing)):
@@ -54,7 +67,7 @@ def testAll(testing):
             inputs[j] = data[j] / 255.0 # normalizzo gli input per avere valori floating point tra 0 e 1
         guess = nn.feedforward(inputs)
         indexGuess = np.argmax(guess)
-        print(guess)
+        # print(guess)
         # print(indexGuess)
         # print(label)
 
@@ -62,6 +75,11 @@ def testAll(testing):
             correct+=1
     percent = correct/len(testing)
     return percent
+
+def draw(event):
+    x1, y1 = (event.x-1),(event.y-1)
+    x2, y2 = (event.x+1),(event.y+1)
+    c.create_oval(x1,y1,x2,y2,width=3)
 
 if __name__ == '__main__':
     rainbow_data = np.load("rainbow.npy") #ogni elemento di rainbow_data corrisponde a un disegno
@@ -83,12 +101,26 @@ if __name__ == '__main__':
     testing = np.concatenate((rainbows["testing"], cats["testing"], trains["testing"]), axis=None) #600 elementi
     np.random.shuffle(testing)
     
-    for i in range(1,11):
-        trainEpoch(training)
-        percentCorrect = testAll(testing)
-        print(f"Epoch: {i}\nCorrect guesses: {percentCorrect*100:.2f}%")
-    
-    #cercare se ci sono modi di preservare l'allenamento della rete una volta spento il programma. richiederebbe probabilmente di salvare tutti i pesi su disco
+    # for i in range(1,11):
+    #     trainEpoch(training)
+    #     percentCorrect = testAll(testing)
+    #     print(f"Epoch: {i}\nCorrect guesses: {percentCorrect*100:.2f}%")
+
+    root = tk.Tk()
+    root.geometry("280x280")
+    root.title("Doodle classifier")
+    c = tk.Canvas(root, height=280, width=280, bg="white")
+    c.place(x=0,y=36)
+    c.bind("<B1-Motion>", draw)
+    trainB = tk.Button(root, text="Train", command=lambda: trainButton(training))
+    trainB.place(height=35, width=70, x=0, y=0)
+    testB = tk.Button(root, text="Test", command=lambda: testButton(testing))
+    testB.place(height=35, width=70, x=71, y=0)
+    clearB = tk.Button(root, text="Clear", command=lambda: c.delete("all"))
+    clearB.place(height=35, width=70, x=141, y=0)
+    clearB = tk.Button(root, text="Guess") # ancora da assegnare
+    clearB.place(height=35, width=70, x=211, y=0)
+    root.mainloop()
 
     #stampo i primi 100 disegni di gatto in una griglia 10x10 
     # for i in range(0,100):
