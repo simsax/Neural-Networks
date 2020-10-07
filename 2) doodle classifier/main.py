@@ -1,8 +1,8 @@
-# cd Desktop\RETI NEURALI E ALG GENETICI\Cazzeggio\2) doodle classifier
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import tkinter as tk
+from PIL import Image, ImageDraw, ImageGrab
 sys.path.insert(1, '/Users/Sax/Desktop/RETI NEURALI E ALG GENETICI/Cazzeggio/toy_nn')
 from matrix import *
 from nn import *
@@ -67,10 +67,6 @@ def testAll(testing):
             inputs[j] = data[j] / 255.0 # normalizzo gli input per avere valori floating point tra 0 e 1
         guess = nn.feedforward(inputs)
         indexGuess = np.argmax(guess)
-        # print(guess)
-        # print(indexGuess)
-        # print(label)
-
         if indexGuess == label:
             correct+=1
     percent = correct/len(testing)
@@ -79,7 +75,28 @@ def testAll(testing):
 def draw(event):
     x1, y1 = (event.x-1),(event.y-1)
     x2, y2 = (event.x+1),(event.y+1)
-    c.create_oval(x1,y1,x2,y2,width=3)
+    c.create_oval(x1,y1,x2,y2,width=12, fill="black")
+
+def guessButton(c, root):
+    x2=200
+    y2=274
+    x1=x2+348
+    y1=y2+348
+    ImageGrab.grab().crop((x2,y2,x1,y1)).save("./test.jpg")
+    img = Image.open("test.jpg")
+    img = img.resize((28,28))
+    img = img.convert("L")
+    pixels = list(img.getdata())
+    for i in range(0,784):
+        pixels[i] = (255 - pixels[i])/255.0
+    guess = nn.feedforward(pixels)
+    indexGuess = np.argmax(guess)
+    if indexGuess == CAT:
+        print("Cat")
+    elif indexGuess == TRAIN:
+        print("Train")
+    else:
+        print("Rainbow")
 
 if __name__ == '__main__':
     rainbow_data = np.load("rainbow.npy") #ogni elemento di rainbow_data corrisponde a un disegno
@@ -107,7 +124,7 @@ if __name__ == '__main__':
     #     print(f"Epoch: {i}\nCorrect guesses: {percentCorrect*100:.2f}%")
 
     root = tk.Tk()
-    root.geometry("280x280")
+    root.geometry('280x316+150+150')
     root.title("Doodle classifier")
     c = tk.Canvas(root, height=280, width=280, bg="white")
     c.place(x=0,y=36)
@@ -118,7 +135,7 @@ if __name__ == '__main__':
     testB.place(height=35, width=70, x=71, y=0)
     clearB = tk.Button(root, text="Clear", command=lambda: c.delete("all"))
     clearB.place(height=35, width=70, x=141, y=0)
-    clearB = tk.Button(root, text="Guess") # ancora da assegnare
+    clearB = tk.Button(root, text="Guess", command=lambda: guessButton(c,root)) 
     clearB.place(height=35, width=70, x=211, y=0)
     root.mainloop()
 
