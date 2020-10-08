@@ -1,4 +1,3 @@
-# cd Desktop\RETI NEURALI E ALG GENETICI\Cazzeggio
 from matrix import *
 import math
 
@@ -11,18 +10,21 @@ def dsigmoid(y):
 
 class NeuralNetwork:
 
-    def __init__(self, numI, numH, numO):
+    def __init__(self, numI, numH, numO, saved):
         self.input_nodes = numI
         self.hidden_nodes = numH
         self.output_nodes = numO
         self.weights_ih = Matrix(self.hidden_nodes, self.input_nodes)
         self.weights_ho = Matrix(self.output_nodes, self.hidden_nodes)
-        self.weights_ih.randomize()
-        self.weights_ho.randomize()
         self.bias_h = Matrix(self.hidden_nodes, 1)
         self.bias_o = Matrix(self.output_nodes, 1)
-        self.bias_h.randomize()
-        self.bias_o.randomize()
+        if saved == 1:
+            self.load()
+        else:
+            self.weights_ih.randomize()
+            self.weights_ho.randomize()
+            self.bias_h.randomize()
+            self.bias_o.randomize()
         self.learning_rate =  0.1
 
     def feedforward(self, input_array):
@@ -68,3 +70,15 @@ class NeuralNetwork:
         weights_ih_deltas = Matrix.Mul(hidden_gradient, inputs_t)
         self.weights_ih.add(weights_ih_deltas)
         self.bias_h.add(hidden_gradient)
+
+    def save(self):
+        self.weights_ih.save('weights_ih')
+        self.weights_ho.save('weights_ho')
+        self.bias_h.save('bias_h')
+        self.bias_o.save('bias_o')
+
+    def load(self):
+        self.weights_ih.load('weights_ih')
+        self.weights_ho.load('weights_ho')
+        self.bias_h.load('bias_h')
+        self.bias_o.load('bias_o')
