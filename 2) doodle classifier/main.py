@@ -111,7 +111,7 @@ if __name__ == '__main__':
     cats = prepareData(cats, cat_data, CAT)
     trains = prepareData(trains, train_data, TRAIN)
 
-    nn = NeuralNetwork(784, 64, 3)
+    nn = NeuralNetwork(784, 64, 3, 1)
 
     #metto tutti gli array in un unico array training e li mischio
     training = np.concatenate((rainbows["training"], cats["training"], trains["training"]), axis=None) #2400 elementi
@@ -138,6 +138,7 @@ if __name__ == '__main__':
     clearB = tk.Button(root, text="Guess", command=lambda: guessButton(c,root)) 
     clearB.place(height=35, width=70, x=211, y=0)
     root.mainloop()
+    nn.save()   
 
     #stampo i primi 100 disegni di gatto in una griglia 10x10 
     # for i in range(0,100):
@@ -147,6 +148,5 @@ if __name__ == '__main__':
     #     plt.imshow(cat_temp.data, cmap="gray")
     #     plt.axis('off')
     # plt.show()
-    
     
  
