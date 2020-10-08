@@ -1,4 +1,3 @@
-# cd Desktop\RETI NEURALI E ALG GENETICI\Cazzeggio
 import numpy as np
 import math
 
@@ -105,3 +104,9 @@ class Matrix:
         sum_e = np.sum(self.data)
         for i in range(0,len(self.data)):
             self.data[i] = self.data[i]/sum_e
+
+    def save(self, filename):
+        np.save(filename + '.npy', self.data)
+
+    def load(self, filename):
+        self.data = np.load(filename + '.npy')
