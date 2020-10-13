@@ -9,7 +9,6 @@ def dsigmoid(y):
     return y*(1-y)
 
 class NeuralNetwork:
-
     def __init__(self, numI, numH, numO, saved):
         self.input_nodes = numI
         self.hidden_nodes = numH
@@ -47,7 +46,6 @@ class NeuralNetwork:
         outputs.add(self.bias_o)
         #outputs.map(sigmoid)
         outputs.softmax()
-
         targets = Matrix.fromArray(target_array)
         #calculate the error -> error = targets - outputs
         output_errors = Matrix.subtract(targets, outputs)
