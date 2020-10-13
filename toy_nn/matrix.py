@@ -100,10 +100,8 @@ class Matrix:
         print(self.data)
 
     def softmax(self):
-        self.data = np.exp(self.data)
-        sum_e = np.sum(self.data)
-        for i in range(0,len(self.data)):
-            self.data[i] = self.data[i]/sum_e
+        e_x = np.exp(self.data - np.max(self.data)) # si sottrae per il massimo per avere stabilità numerica
+        self.data = e_x / e_x.sum()
 
     def save(self, filename):
         np.save(filename + '.npy', self.data)
