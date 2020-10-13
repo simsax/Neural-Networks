@@ -7,8 +7,8 @@ sys.path.insert(1, '/Users/Sax/Desktop/RETI NEURALI E ALG GENETICI/Cazzeggio/toy
 from matrix import *
 from nn import *
 
-TOTAL_DATA = 1000 
-TRAINING_DATA = 800 # numero di immagini (array) per il training
+TOTAL_DATA = 20000 
+TRAINING_DATA = 18000 # numero di immagini (array) per il training
 TESTING_DATA = TOTAL_DATA-TRAINING_DATA # numero di immagini per il test
 
 CAT = 0
@@ -49,6 +49,7 @@ def trainEpoch(training):
 
 def trainButton(training):
     global epochCounter
+    #for i in range(0,10):
     trainEpoch(training)
     epochCounter += 1
     print(f"Epoch: {epochCounter}")
@@ -103,6 +104,8 @@ if __name__ == '__main__':
     cat_data = np.load("cat.npy")
     train_data = np.load("train.npy")
 
+    #print(f"r:{len(rainbow_data)}, t:{len(train_data)}, c:{len(cat_data)}")
+
     rainbows = {"training":[{"arr":[],"label":None} for i in range(TRAINING_DATA)], "testing":[{"arr":[],"label":None} for i in range(TESTING_DATA)]}
     cats = {"training":[{"arr":[],"label":None} for i in range(TRAINING_DATA)], "testing":[{"arr":[],"label":None} for i in range(TESTING_DATA)]}
     trains = {"training":[{"arr":[],"label":None} for i in range(TRAINING_DATA)], "testing":[{"arr":[],"label":None} for i in range(TESTING_DATA)]}
@@ -111,7 +114,7 @@ if __name__ == '__main__':
     cats = prepareData(cats, cat_data, CAT)
     trains = prepareData(trains, train_data, TRAIN)
 
-    nn = NeuralNetwork(784, 64, 3, 1)
+    nn = NeuralNetwork(784, 200, 3, 1)
 
     #metto tutti gli array in un unico array training e li mischio
     training = np.concatenate((rainbows["training"], cats["training"], trains["training"]), axis=None) #2400 elementi
@@ -138,7 +141,9 @@ if __name__ == '__main__':
     clearB = tk.Button(root, text="Guess", command=lambda: guessButton(c,root)) 
     clearB.place(height=35, width=70, x=211, y=0)
     root.mainloop()
-    nn.save()   
+    nn.save()
+
+    #dovrò trovare il modo di allenarla su grandi dati (cloud), e di salvare tale allenamento
 
     #stampo i primi 100 disegni di gatto in una griglia 10x10 
     # for i in range(0,100):
