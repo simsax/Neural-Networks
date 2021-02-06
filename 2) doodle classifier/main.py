@@ -143,8 +143,6 @@ if __name__ == '__main__':
     root.mainloop()
     nn.save()
 
-    #dovrò trovare il modo di allenarla su grandi dati (cloud), e di salvare tale allenamento
-
     #stampo i primi 100 disegni di gatto in una griglia 10x10 
     # for i in range(0,100):
     #     plt.subplot(10,10,i+1)
